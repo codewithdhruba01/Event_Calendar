@@ -108,24 +108,24 @@ export function AddTodoInput() {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="border border-zinc-200 dark:border-zinc-800 rounded-xl bg-card shadow-lg overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+        <form onSubmit={handleSubmit} className="border border-zinc-800 rounded-xl bg-[#1E1E1E] shadow-lg overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
             {/* Header / Title Input */}
-            <div className="p-4 border-b border-border/50">
+            <div className="p-4 border-b border-zinc-800">
                 <input
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     placeholder="Task Title"
-                    className="text-xl font-bold bg-transparent border-none outline-none placeholder:text-zinc-400 w-full"
+                    className="text-xl font-bold bg-transparent border-none outline-none placeholder:text-zinc-500 text-zinc-100 w-full"
                     autoFocus
                 />
             </div>
 
             {/* Toolbar */}
-            <div className="flex items-center gap-1 px-2 py-1.5 border-b border-border/50 bg-zinc-50/50 dark:bg-zinc-900/50 overflow-x-auto">
+            <div className="flex items-center gap-1 px-2 py-1.5 border-b border-zinc-800 bg-[#252525] overflow-x-auto">
                 <ToolbarIcon icon={TextBoldIcon} onClick={() => insertFormat("**", "**")} />
                 <ToolbarIcon icon={TextItalicIcon} onClick={() => insertFormat("_", "_")} />
                 <ToolbarIcon icon={TextUnderlineIcon} onClick={() => insertFormat("<u>", "</u>")} />
-                <div className="w-px h-4 bg-zinc-300 dark:bg-zinc-700 mx-1" />
+                <div className="w-px h-4 bg-zinc-700 mx-1" />
                 <ToolbarIcon icon={Link01Icon} onClick={handleLink} />
                 <ToolbarIcon icon={QuoteDownIcon} onClick={() => insertFormat("> ")} />
                 <ToolbarIcon icon={ListSettingIcon} onClick={() => insertFormat("- ")} />
@@ -138,17 +138,17 @@ export function AddTodoInput() {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Add extra details or description..."
-                    className="w-full h-full min-h-[100px] bg-transparent border-none outline-none resize-none text-zinc-600 dark:text-zinc-300 font-medium leading-relaxed"
+                    className="w-full h-full min-h-[100px] bg-transparent border-none outline-none resize-none text-zinc-300 font-medium leading-relaxed placeholder:text-zinc-600"
                 />
             </div>
 
             {/* Meta & Actions Footer */}
-            <div className="bg-zinc-50 dark:bg-zinc-900/30 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-border/50">
+            <div className="bg-[#1E1E1E] p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-zinc-800">
                 <div className="flex flex-wrap gap-2">
                     <Popover>
                         <PopoverTrigger
                             render={
-                                <button type="button" className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors", date ? "text-[#5E51D0] bg-[#5E51D0]/10 border-[#5E51D0]/20" : "text-zinc-500 border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800")}>
+                                <button type="button" className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors", date ? "text-[#5E51D0] bg-[#5E51D0]/10 border-[#5E51D0]/20" : "text-zinc-400 border-zinc-700 hover:bg-zinc-800")}>
                                     <HugeiconsIcon icon={Calendar01Icon} className="size-3.5" />
                                     {date ? format(date, "MMM d") : "Due Date"}
                                 </button>
@@ -167,7 +167,7 @@ export function AddTodoInput() {
                     <Popover>
                         <PopoverTrigger
                             render={
-                                <button type="button" className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors", project ? "text-[#5E51D0] bg-[#5E51D0]/10 border-[#5E51D0]/20" : "text-zinc-500 border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800")}>
+                                <button type="button" className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors", project ? "text-[#5E51D0] bg-[#5E51D0]/10 border-[#5E51D0]/20" : "text-zinc-400 border-zinc-700 hover:bg-zinc-800")}>
                                     <HugeiconsIcon icon={Tag01Icon} className="size-3.5" />
                                     {project || "Level / Label"}
                                 </button>
@@ -207,7 +207,7 @@ export function AddTodoInput() {
                     <button
                         type="button"
                         onClick={() => setIsExpanded(false)}
-                        className="px-4 py-2 rounded-full text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors"
+                        className="px-4 py-2 rounded-full text-sm font-medium text-zinc-400 hover:text-zinc-200 transition-colors"
                     >
                         Cancel
                     </button>
