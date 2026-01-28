@@ -29,6 +29,7 @@ import {
 import { CreateEventDialog } from "./create-event-dialog";
 import { SchedulePopover } from "./schedule-popover";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SignedOut, SignInButton } from "@clerk/nextjs";
 
 export function CalendarHeader() {
   const { currentWeekStart } = useCalendarStore();
@@ -185,7 +186,16 @@ export function CalendarHeader() {
                 <span className="hidden lg:inline">Create Event</span>
               </Button>
 
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <Button variant="ghost" size="sm">
+                    Sign In
+                  </Button>
+                </SignInButton>
+              </SignedOut>
+
               <ThemeToggle />
+
 
               <Link
                 href="https://github.com/ln-dev7/square-ui/tree/master/templates-baseui/calendar"

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.0.0",
+    "@clerk/nextjs": "^6.36.10",
     "@hugeicons/core-free-icons": "^2.0.0",
     "@hugeicons/react": "^1.1.1",
     "class-variance-authority": "^0.7.1",
@@ -18,7 +19,6 @@
     "diff": "^8.0.3",
     "hono": "^4.11.4",
     "next": "^16.1.6",
-    "next-auth": "^4.24.13",
     "next-themes": "^0.4.6",
     "react": "19.2.3",
     "react-day-picker": "^9.11.1",

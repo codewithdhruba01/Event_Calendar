@@ -46,6 +46,7 @@ import {
 } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 export function CalendarSidebar({
   ...props
@@ -74,9 +75,17 @@ export function CalendarSidebar({
               </div>
             </div>
 
-            <Avatar className="size-7 border-2 border-background">
-              <AvatarImage src="/ln.png" />
-            </Avatar>
+            <SignedIn>
+              <UserButton afterSignOutUrl="/" />
+            </SignedIn>
+            <SignedOut>
+              {/* Optional: Show nothing or a sign in button icon? 
+                   The user specifically wants the 'login user image'. 
+                   If signed out, keeping nothing is cleaner or a generic icon. */}
+              <Link href="#" className="size-7 flex items-center justify-center rounded-full bg-muted text-muted-foreground">
+                <HugeiconsIcon icon={UserGroupIcon} className="size-4" />
+              </Link>
+            </SignedOut>
           </Link>
           <div className="relative">
             <HugeiconsIcon
@@ -293,16 +302,19 @@ export function CalendarSidebar({
         </div>
 
         <div className="flex items-center gap-3">
-          <Avatar className="size-7 border-2 border-background">
-            <AvatarImage src="https://api.dicebear.com/9.x/glass/svg?seed=user" />
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-foreground truncate">LN</p>
-            <p className="text-xs text-muted-foreground truncate">lndev.me</p>
-          </div>
+          <SignedIn>
+            <div className="flex items-center gap-3 w-full">
+              <UserButton afterSignOutUrl="/" showName userProfileMode="modal" />
+              <div className="flex-1 min-w-0 flex flex-col items-start">
+                {/* Clerk handles the name/email display in the UserButton, but we can custom style if needed, 
+                 for now we let UserButton handle the avatar and popup. 
+                 If we want custom text next to it we need useUser() hook. */}
+              </div>
+            </div>
+          </SignedIn>
           <HugeiconsIcon
             icon={Settings01Icon}
-            className="size-4 text-muted-foreground"
+            className="size-4 text-muted-foreground ml-auto"
           />
         </div>
       </SidebarFooter>

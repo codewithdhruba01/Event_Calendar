@@ -2,6 +2,7 @@
 
 import { format } from "date-fns";
 import { useCalendarStore } from "@/store/calendar-store";
+import { useUser } from "@clerk/nextjs";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   PencilEdit01Icon,
@@ -91,6 +92,7 @@ function copyToClipboard(text: string) {
 }
 
 export function EventSheet({ event, open, onOpenChange }: EventSheetProps) {
+  const { user } = useUser();
   const { deleteEvent } = useCalendarStore();
   const [rsvpStatus, setRsvpStatus] = useState<"yes" | "no" | "maybe" | null>(
     null
@@ -110,6 +112,8 @@ export function EventSheet({ event, open, onOpenChange }: EventSheetProps) {
   const organizerEmail = getParticipantEmail(organizer);
   const otherParticipants = event.participants.slice(1);
 
+  const currentUserEmail = user?.primaryEmailAddress?.emailAddress;
+
   const mockParticipants = [
     {
       id: organizer,
@@ -117,16 +121,19 @@ export function EventSheet({ event, open, onOpenChange }: EventSheetProps) {
       email: organizerEmail,
       isOrganizer: true,
       rsvp: "yes" as const,
-      isYou: false,
+      isYou: currentUserEmail === organizerEmail,
     },
-    ...otherParticipants.slice(0, 3).map((p) => ({
-      id: p,
-      name: getParticipantName(p),
-      email: getParticipantEmail(p),
-      isOrganizer: false,
-      rsvp: "yes" as const,
-      isYou: false,
-    })),
+    ...otherParticipants.slice(0, 3).map((p) => {
+      const email = getParticipantEmail(p);
+      return {
+        id: p,
+        name: getParticipantName(p),
+        email: email,
+        isOrganizer: false,
+        rsvp: "yes" as const,
+        isYou: currentUserEmail === email,
+      }
+    }),
   ];
 
   const yesCount = mockParticipants.filter((p) => p.rsvp === "yes").length;
