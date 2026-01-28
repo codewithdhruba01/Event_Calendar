@@ -8,7 +8,6 @@ import { Separator } from "@/components/ui/separator";
 export function TodoContainer() {
     const { todos } = useTodoStore();
 
-    // Sort: Incomplete first, then by date logic if we had it, but for now just reverse creation (default)
     const sortedTodos = [...todos].sort((a, b) => {
         if (a.completed === b.completed) return 0;
         return a.completed ? 1 : -1;
@@ -17,31 +16,37 @@ export function TodoContainer() {
     const activeTodos = sortedTodos.filter(t => !t.completed);
     const completedTodos = sortedTodos.filter(t => t.completed);
 
+    // Calculate progress
+    const total = todos.length;
+    const completed = completedTodos.length;
+
     return (
-        <div className="p-8 h-full flex flex-col max-w-4xl mx-auto w-full">
-            <div className="mb-6">
-                <h1 className="text-3xl font-bold tracking-tight mb-1">Today</h1>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span>{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
+        <div className="p-6 md:p-12 h-full flex flex-col max-w-4xl mx-auto w-full bg-white dark:bg-black/20 pb-20">
+            <div className="mb-10 text-center">
+                <div className="flex items-center justify-center gap-3 mb-2">
+                    <h1 className="text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">To-dos</h1>
+                    <div className="bg-[#5E51D0]/10 text-[#5E51D0] px-3 py-1 rounded-full text-sm font-bold">
+                        {completed}/{total}
+                    </div>
                 </div>
+                <p className="text-zinc-500 font-medium">Capture ideas and track your work</p>
             </div>
 
-            <div className="flex-1 overflow-y-auto pb-20 no-scrollbar">
-                <div className="space-y-0.5">
+            <div className="flex-1 overflow-y-auto no-scrollbar pb-20 px-2">
+                <div className="mb-8">
+                    <AddTodoInput />
+                </div>
+
+                <div className="space-y-1">
                     {activeTodos.map((todo) => (
                         <TodoItem key={todo.id} todo={todo} />
                     ))}
                 </div>
 
-                <div className="py-2">
-                    <AddTodoInput />
-                </div>
-
                 {completedTodos.length > 0 && (
-                    <div className="mt-8">
-                        <h3 className="text-sm font-semibold text-muted-foreground mb-2">Completed</h3>
-                        <Separator className="mb-2" />
-                        <div className="space-y-0.5 opacity-60">
+                    <div className="mt-12">
+                        <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-4 ml-4">Recently Completed</h3>
+                        <div className="space-y-1 opacity-60 grayscale hover:grayscale-0 transition-all duration-300">
                             {completedTodos.map((todo) => (
                                 <TodoItem key={todo.id} todo={todo} />
                             ))}

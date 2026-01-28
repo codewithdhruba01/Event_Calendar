@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 export interface Todo {
     id: string;
     text: string;
+    description?: string;
     completed: boolean;
     time?: string;
     project?: string;
@@ -13,7 +14,7 @@ export interface Todo {
 
 interface TodoState {
     todos: Todo[];
-    addTodo: (text: string, time?: string, project?: string) => void;
+    addTodo: (text: string, description?: string, time?: string, project?: string) => void;
     toggleTodo: (id: string) => void;
     deleteTodo: (id: string) => void;
     clearCompleted: () => void;
@@ -22,14 +23,18 @@ interface TodoState {
 const DEFAULT_TODOS: Todo[] = [
     {
         id: "1",
-        text: "Welcome to your Todo List! ✅",
+        text: "Design Review",
+        description: "Review new homepage mockups with the team.",
         completed: false,
+        time: "10:00 AM",
+        project: "Work",
         createdAt: new Date().toISOString(),
     },
     {
         id: "2",
-        text: "Try adding a new task above 👆",
+        text: "Grocery Shopping",
         completed: false,
+        project: "Personal",
         createdAt: new Date().toISOString(),
     },
 ];
@@ -38,12 +43,13 @@ export const useTodoStore = create<TodoState>()(
     persist(
         (set) => ({
             todos: DEFAULT_TODOS,
-            addTodo: (text, time, project) =>
+            addTodo: (text, description, time, project) =>
                 set((state) => ({
                     todos: [
                         {
                             id: uuidv4(),
                             text,
+                            description,
                             time,
                             project,
                             completed: false,
