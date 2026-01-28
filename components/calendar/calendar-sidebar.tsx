@@ -21,6 +21,7 @@ import {
   Layers01Icon,
   ArrowUpRight01Icon,
   Note01Icon,
+  CheckListIcon,
 } from "@hugeicons/core-free-icons";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
@@ -158,6 +159,16 @@ export function CalendarSidebar({
                 >
                   <HugeiconsIcon icon={Note01Icon} className="size-4" />
                   <span>Sticky Notes</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  isActive={pathname === "/todo"}
+                  className="h-[26px] text-xs text-zinc-950 dark:text-muted-foreground hover:bg-neutral-100/50 dark:hover:bg-muted/50 hover:text-zinc-950 dark:hover:text-foreground"
+                  render={<Link href="/todo" />}
+                >
+                  <HugeiconsIcon icon={CheckListIcon} className="size-4" />
+                  <span>Todo List</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
