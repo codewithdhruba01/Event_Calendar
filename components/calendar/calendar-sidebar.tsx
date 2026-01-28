@@ -20,6 +20,7 @@ import {
   ArrowDown01Icon,
   Layers01Icon,
   ArrowUpRight01Icon,
+  Note01Icon,
 } from "@hugeicons/core-free-icons";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
@@ -38,6 +39,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
   Collapsible,
@@ -54,6 +56,7 @@ import { Add01Icon } from "@hugeicons/core-free-icons";
 export function CalendarSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
   const [featuredOpen, setFeaturedOpen] = useState(true);
   const [createJobOpen, setCreateJobOpen] = useState(false);
   const { jobs, removeJob } = useJobStore();
@@ -139,11 +142,22 @@ export function CalendarSidebar({
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
-                  isActive
-                  className="h-[26px] text-xs bg-neutral-100 dark:bg-muted text-zinc-950 dark:text-foreground hover:bg-neutral-100 dark:hover:bg-muted hover:text-zinc-950 dark:hover:text-foreground"
+                  isActive={pathname === "/"}
+                  className="h-[26px] text-xs text-zinc-950 dark:text-muted-foreground hover:bg-neutral-100/50 dark:hover:bg-muted/50 hover:text-zinc-950 dark:hover:text-foreground"
+                  render={<Link href="/" />}
                 >
                   <HugeiconsIcon icon={Calendar01Icon} className="size-4" />
                   <span>Calendar</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  isActive={pathname === "/sticky-notes"}
+                  className="h-[26px] text-xs text-zinc-950 dark:text-muted-foreground hover:bg-neutral-100/50 dark:hover:bg-muted/50 hover:text-zinc-950 dark:hover:text-foreground"
+                  render={<Link href="/sticky-notes" />}
+                >
+                  <HugeiconsIcon icon={Note01Icon} className="size-4" />
+                  <span>Sticky Notes</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
