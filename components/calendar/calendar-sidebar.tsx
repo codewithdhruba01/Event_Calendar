@@ -50,7 +50,7 @@ import {
 } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton, useUser, useClerk } from "@clerk/nextjs";
 import { useJobStore } from "@/store/job-store";
 import { CreateJobDialog } from "@/components/jobs/create-job-dialog";
 import { Add01Icon } from "@hugeicons/core-free-icons";
@@ -301,7 +301,11 @@ export function CalendarSidebar({
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton className="h-[26px] text-xs text-zinc-950 dark:text-muted-foreground hover:bg-neutral-100/50 dark:hover:bg-muted/50 hover:text-zinc-950 dark:hover:text-foreground">
+              <SidebarMenuButton
+                isActive={pathname === "/plans"}
+                className="h-[26px] text-xs text-zinc-950 dark:text-muted-foreground hover:bg-neutral-100/50 dark:hover:bg-muted/50 hover:text-zinc-950 dark:hover:text-foreground"
+                render={<Link href="/plans" />}
+              >
                 <HugeiconsIcon icon={CrownIcon} className="size-4" />
                 <span>Plans</span>
               </SidebarMenuButton>
@@ -311,14 +315,7 @@ export function CalendarSidebar({
 
         <div className="flex items-center gap-3">
           <SignedIn>
-            <div className="flex items-center gap-3 w-full">
-              <UserButton afterSignOutUrl="/" showName userProfileMode="modal" />
-              <div className="flex-1 min-w-0 flex flex-col items-start">
-                {/* Clerk handles the name/email display in the UserButton, but we can custom style if needed, 
-                 for now we let UserButton handle the avatar and popup. 
-                 If we want custom text next to it we need useUser() hook. */}
-              </div>
-            </div>
+            <SidebarUserButton />
           </SignedIn>
           <HugeiconsIcon
             icon={Settings01Icon}
@@ -327,5 +324,30 @@ export function CalendarSidebar({
         </div>
       </SidebarFooter>
     </Sidebar>
+  );
+}
+
+function SidebarUserButton() {
+  const { user } = useUser();
+  const { openUserProfile } = useClerk();
+
+  if (!user) return null;
+
+  return (
+    <SidebarMenuButton
+      size="lg"
+      className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+      onClick={() => openUserProfile()}
+    >
+      <Avatar className="h-8 w-8 rounded-lg">
+        <AvatarImage src={user.imageUrl} alt={user.fullName || ""} />
+        {/* Fallback can be added if needed */}
+      </Avatar>
+      <div className="grid flex-1 text-left text-sm leading-tight">
+        <span className="truncate font-semibold">{user.fullName}</span>
+        <span className="truncate text-xs text-muted-foreground">{user.primaryEmailAddress?.emailAddress}</span>
+      </div>
+      <HugeiconsIcon icon={ArrowUpRight01Icon} className="ml-auto size-4" />
+    </SidebarMenuButton>
   );
 }

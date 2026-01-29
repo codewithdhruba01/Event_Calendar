@@ -4,17 +4,18 @@ import { useState } from "react";
 import { useTodoStore } from "@/store/todo-store";
 import { TodoItem } from "./todo-item";
 import { AddTodoInput } from "./add-todo-input";
-import { TodoHeader } from "./todo-header";
+import { AppHeader } from "@/components/app-header";
 import { AnalyticsDashboard } from "../analytics/analytics-dashboard";
 import { cn } from "@/lib/utils";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Search01Icon, Sorting05Icon } from "@hugeicons/core-free-icons";
+import { Search01Icon, Sorting05Icon, Add01Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/button";
 
 export function TodoContainer() {
     const { todos } = useTodoStore();
     const [searchQuery, setSearchQuery] = useState("");
     const [filter, setFilter] = useState<"all" | "active" | "completed">("all");
+    const [isAddingTask, setIsAddingTask] = useState(false);
 
     const filteredTodos = todos.filter((todo) => {
         const matchesSearch = todo.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -32,7 +33,25 @@ export function TodoContainer() {
 
     return (
         <div className="h-full flex flex-col w-full bg-zinc-50/50 dark:bg-background text-foreground transition-colors duration-300">
-            <TodoHeader />
+            <AppHeader>
+                <Button
+                    onClick={() => setIsAddingTask(true)}
+                    size="sm"
+                    variant="outline"
+                    className="hidden md:flex"
+                >
+                    <HugeiconsIcon icon={Add01Icon} className="size-4 mr-2" />
+                    New Task
+                </Button>
+                <Button
+                    onClick={() => setIsAddingTask(true)}
+                    size="icon"
+                    variant="ghost"
+                    className="md:hidden"
+                >
+                    <HugeiconsIcon icon={Add01Icon} className="size-5" />
+                </Button>
+            </AppHeader>
             <div className="p-6 md:p-8 flex-1 overflow-hidden flex flex-col pb-20">
                 {/* Header Section */}
                 <div className="mb-6 space-y-4 w-full">
@@ -105,7 +124,7 @@ export function TodoContainer() {
 
                     <div className="pt-4 sticky bottom-0 w-full pointer-events-none">
                         <div className="pointer-events-auto">
-                            <AddTodoInput />
+                            <AddTodoInput isOpen={isAddingTask} onClose={() => setIsAddingTask(false)} />
                         </div>
                     </div>
                 </div>

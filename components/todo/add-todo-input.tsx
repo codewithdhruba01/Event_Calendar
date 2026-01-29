@@ -24,8 +24,13 @@ import {
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 
-export function AddTodoInput() {
-    const [isExpanded, setIsExpanded] = useState(false);
+export function AddTodoInput({
+    isOpen,
+    onClose
+}: {
+    isOpen: boolean;
+    onClose: () => void;
+}) {
     const [text, setText] = useState("");
     const [description, setDescription] = useState("");
     const [date, setDate] = useState<Date | undefined>(undefined);
@@ -89,22 +94,12 @@ export function AddTodoInput() {
             setDescription("");
             setDate(undefined);
             setProject("");
-            setIsExpanded(false);
+            onClose();
         }
     };
 
-    if (!isExpanded) {
-        return (
-            <div className="flex justify-start">
-                <Button
-                    onClick={() => setIsExpanded(true)}
-                    className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-full px-8 py-6 text-base font-semibold shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] gap-2.5 group"
-                >
-                    <HugeiconsIcon icon={Add01Icon} className="size-5 group-hover:rotate-90 transition-transform duration-300" />
-                    New Task
-                </Button>
-            </div>
-        )
+    if (!isOpen) {
+        return null;
     }
 
     return (
@@ -206,7 +201,7 @@ export function AddTodoInput() {
                 <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
                     <button
                         type="button"
-                        onClick={() => setIsExpanded(false)}
+                        onClick={onClose}
                         className="px-4 py-2 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                     >
                         Cancel

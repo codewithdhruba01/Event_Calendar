@@ -23,7 +23,7 @@ import {
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { SignedOut, SignInButton } from "@clerk/nextjs";
 
-export function TodoHeader() {
+export function AppHeader({ children }: { children?: React.ReactNode }) {
     return (
         <div className="border-b border-border bg-background transition-colors duration-300">
             <div className="px-3 md:px-6 py-2.5 md:py-3">
@@ -38,6 +38,7 @@ export function TodoHeader() {
 
                     {/* Right Side: Icons */}
                     <div className="flex items-center gap-1 md:gap-1.5 lg:gap-2 shrink-0">
+                        {children}
                         <DropdownMenu>
                             <DropdownMenuTrigger
                                 render={
