@@ -39,7 +39,7 @@ export default function FilesPage() {
         <SidebarProvider>
             <CalendarSidebar />
             <SidebarInset>
-                <div className="flex flex-col h-full bg-zinc-950 text-zinc-100 font-sans">
+                <div className="flex flex-col h-svh overflow-hidden bg-zinc-950 text-zinc-100 font-sans">
                     {/* Header - Full Width */}
                     <AppHeader
                         showNotifications={false}
