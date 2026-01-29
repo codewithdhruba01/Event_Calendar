@@ -38,6 +38,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body
+          suppressHydrationWarning
           className={cn(geistSans.variable, geistMono.variable, patrickHand.variable, "antialiased")}
         >
           <ThemeProvider
