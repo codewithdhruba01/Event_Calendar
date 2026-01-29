@@ -183,7 +183,11 @@ export function CalendarSidebar({
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton className="h-[26px] text-xs text-zinc-950 dark:text-muted-foreground hover:bg-neutral-100/50 dark:hover:bg-muted/50 hover:text-zinc-950 dark:hover:text-foreground">
+                <SidebarMenuButton
+                  isActive={pathname === "/files"}
+                  className="h-[26px] text-xs text-zinc-950 dark:text-muted-foreground hover:bg-neutral-100/50 dark:hover:bg-muted/50 hover:text-zinc-950 dark:hover:text-foreground"
+                  render={<Link href="/files" />}
+                >
                   <HugeiconsIcon icon={Folder01Icon} className="size-4" />
                   <span>Files</span>
                   <HugeiconsIcon

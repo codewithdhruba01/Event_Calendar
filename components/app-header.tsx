@@ -23,18 +23,25 @@ import {
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { SignedOut, SignInButton } from "@clerk/nextjs";
 
-export function AppHeader({ children }: { children?: React.ReactNode }) {
+export function AppHeader({ children, centerContent, breadcrumbs }: { children?: React.ReactNode; centerContent?: React.ReactNode; breadcrumbs?: React.ReactNode }) {
     return (
-        <div className="border-b border-border bg-background transition-colors duration-300">
+        <div className="border-b border-border bg-background transition-colors duration-300 relative">
             <div className="px-3 md:px-6 py-2.5 md:py-3">
                 <div className="flex items-center justify-between gap-2 md:gap-3 flex-nowrap">
-                    {/* Left Side: Sidebar Trigger only */}
+                    {/* Left Side: Sidebar Trigger + Breadcrumbs */}
                     <div className="flex items-center gap-2 flex-1 min-w-0">
                         <SidebarTrigger className="shrink-0 text-muted-foreground hover:text-foreground" />
-                        <div className="flex-1 min-w-0">
-                            {/* Empty as requested (No Date/Text) */}
+                        <div className="flex items-center gap-2 min-w-0">
+                            {breadcrumbs}
                         </div>
                     </div>
+
+                    {/* Center Content (Absolute centered) */}
+                    {centerContent && (
+                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block">
+                            {centerContent}
+                        </div>
+                    )}
 
                     {/* Right Side: Icons */}
                     <div className="flex items-center gap-1 md:gap-1.5 lg:gap-2 shrink-0">
