@@ -1,5 +1,7 @@
 # Goodwell
 
+![Goodwell Banner](public/screenshoot/banner.png)
+
 ![Project Status](https://img.shields.io/badge/status-active-success.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Next.js](https://img.shields.io/badge/Next.js-16-black)
