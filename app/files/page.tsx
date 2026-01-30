@@ -60,35 +60,58 @@ import { cn } from "@/lib/utils";
 // Types
 interface Folder {
     id: string;
+    icon: any;
     label: string;
     count: number;
     size: string;
     color: string;
 }
 
+interface TeamMember {
+    id: string;
+    name: string;
+    gradient: string;
+}
+
+const GRADIENTS = [
+    "bg-gradient-to-br from-cyan-400 to-blue-500",
+    "bg-gradient-to-br from-blue-500 to-purple-500",
+    "bg-gradient-to-br from-purple-500 to-pink-500",
+    "bg-gradient-to-br from-pink-500 to-rose-500",
+    "bg-gradient-to-br from-rose-500 to-orange-500",
+    "bg-gradient-to-br from-orange-500 to-amber-500",
+    "bg-gradient-to-br from-emerald-400 to-cyan-500",
+    "bg-gradient-to-br from-indigo-400 to-purple-600",
+];
+
 export default function FilesPage() {
     // State
-    const [folders, setFolders] = useState<Folder[]>([
-        { id: "1", label: "Design Assets", count: 24, size: "1.2 GB", color: "text-purple-400" },
-        { id: "2", label: "Projects", count: 18, size: "856 MB", color: "text-blue-400" },
-        { id: "3", label: "Documents", count: 45, size: "234 MB", color: "text-orange-400" },
-        { id: "4", label: "Media", count: 67, size: "4.5 GB", color: "text-pink-400" },
-        { id: "5", label: "Archives", count: 12, size: "2.1 GB", color: "text-emerald-400" },
-    ]);
-
+    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [isCreateOpen, setIsCreateOpen] = useState(false);
     const [isRenameOpen, setIsRenameOpen] = useState(false);
+    const [isAddMemberOpen, setIsAddMemberOpen] = useState(false);
+
     const [newFolderName, setNewFolderName] = useState("");
-    const [folderToRename, setFolderToRename] = useState<Folder | null>(null);
     const [renameValue, setRenameValue] = useState("");
+    const [selectedFolderIndex, setSelectedFolderIndex] = useState<number | null>(null);
+    const [newMemberName, setNewMemberName] = useState("");
+
+    const [folders, setFolders] = useState<Folder[]>([
+        { id: "1", icon: Image01Icon, label: "Design Assets", count: 24, size: "1.2 GB", color: "text-purple-400" },
+        { id: "2", icon: Folder01Icon, label: "Projects", count: 18, size: "856 MB", color: "text-blue-400" },
+        { id: "3", icon: File02Icon, label: "Documents", count: 45, size: "234 MB", color: "text-orange-400" },
+        { id: "4", icon: VideoReplayIcon, label: "Media", count: 67, size: "4.5 GB", color: "text-pink-400" },
+        { id: "5", icon: ArchiveIcon, label: "Archives", count: 12, size: "2.1 GB", color: "text-emerald-400" },
+    ]);
+
+    const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
 
     // Handlers
-    const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
-
     const handleCreateFolder = () => {
         if (!newFolderName.trim()) return;
         const newFolder: Folder = {
             id: Date.now().toString(),
+            icon: Folder01Icon, // Default icon for new folders
             label: newFolderName,
             count: 0,
             size: "0 B",
@@ -104,17 +127,37 @@ export default function FilesPage() {
     };
 
     const openRenameDialog = (folder: Folder) => {
-        setFolderToRename(folder);
-        setRenameValue(folder.label);
-        setIsRenameOpen(true);
+        const index = folders.findIndex(f => f.id === folder.id);
+        if (index !== -1) {
+            setSelectedFolderIndex(index);
+            setRenameValue(folder.label);
+            setIsRenameOpen(true);
+        }
     };
 
     const handleRenameFolder = () => {
-        if (!renameValue.trim() || !folderToRename) return;
-        setFolders(folders.map(f => f.id === folderToRename.id ? { ...f, label: renameValue } : f));
-        setIsRenameOpen(false);
-        setFolderToRename(null);
-        setRenameValue("");
+        if (selectedFolderIndex !== null && renameValue.trim()) {
+            const updatedFolders = [...folders];
+            updatedFolders[selectedFolderIndex].label = renameValue;
+            setFolders(updatedFolders);
+            setRenameValue("");
+            setIsRenameOpen(false);
+            setSelectedFolderIndex(null);
+        }
+    };
+
+    const handleAddMember = () => {
+        if (newMemberName.trim()) {
+            const randomGradient = GRADIENTS[Math.floor(Math.random() * GRADIENTS.length)];
+            const newMember: TeamMember = {
+                id: Math.random().toString(36).substr(2, 9),
+                name: newMemberName,
+                gradient: randomGradient,
+            };
+            setTeamMembers([...teamMembers, newMember]);
+            setNewMemberName("");
+            setIsAddMemberOpen(false);
+        }
     };
 
     return (
@@ -160,7 +203,7 @@ export default function FilesPage() {
                                     <HugeiconsIcon icon={FilterHorizontalIcon} className="size-4" />
                                 </Button>
                             </div>
-                            <Button size="sm" className="hidden md:flex gap-2">
+                            <Button className="hidden md:flex gap-2 h-10 px-6 font-medium shadow-sm transition-all  active:scale-95 cursor-pointer">
                                 <HugeiconsIcon icon={Upload02Icon} className="size-4" />
                                 Upload
                             </Button>
@@ -312,48 +355,45 @@ export default function FilesPage() {
                             </div>
 
                             {/* Team Members Card */}
-                            <div className="bg-card border border-border rounded-2xl p-4 space-y-4 shadow-sm">
+                            <div className="bg-card border border-border rounded-2xl p-5 space-y-4 shadow-sm">
                                 <div className="flex items-center justify-between">
-                                    <h3 className="text-[15px] font-semibold text-card-foreground">Team Members</h3>
-                                    <span className="text-xs font-medium text-muted-foreground">5 people</span>
+                                    <h3 className="text-[15px] font-semibold text-foreground">Team Members</h3>
+                                    <span className="text-xs font-medium text-muted-foreground">{teamMembers.length} people</span>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <div className="flex -space-x-2">
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <div className="size-8 rounded-full border-2 border-background bg-gradient-to-br from-cyan-400 to-blue-500 cursor-help" />
-                                            </TooltipTrigger>
-                                            <TooltipContent>John Doe</TooltipContent>
-                                        </Tooltip>
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <div className="size-8 rounded-full border-2 border-background bg-gradient-to-br from-blue-500 to-purple-500 cursor-help" />
-                                            </TooltipTrigger>
-                                            <TooltipContent>Jane Smith</TooltipContent>
-                                        </Tooltip>
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <div className="size-8 rounded-full border-2 border-background bg-gradient-to-br from-purple-500 to-pink-500 cursor-help" />
-                                            </TooltipTrigger>
-                                            <TooltipContent>Mike Johnson</TooltipContent>
-                                        </Tooltip>
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <div className="size-8 rounded-full border-2 border-background bg-gradient-to-br from-pink-500 to-rose-500 cursor-help" />
-                                            </TooltipTrigger>
-                                            <TooltipContent>Sarah Wilson</TooltipContent>
-                                        </Tooltip>
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <div className="size-8 rounded-full border-2 border-background bg-muted flex items-center justify-center text-[10px] font-bold text-muted-foreground cursor-help">
-                                                    +1
-                                                </div>
-                                            </TooltipTrigger>
-                                            <TooltipContent>And 1 more</TooltipContent>
-                                        </Tooltip>
+                                <div className="flex items-center gap-4">
+                                    <div className="flex -space-x-3">
+                                        {teamMembers.length === 0 ? (
+                                            <div className="size-10 rounded-full border-2 border-background bg-muted flex items-center justify-center text-xs text-muted-foreground">
+                                                0
+                                            </div>
+                                        ) : (
+                                            <>
+                                                {teamMembers.slice(0, 4).map((member) => (
+                                                    <Tooltip key={member.id}>
+                                                        <TooltipTrigger>
+                                                            <div className={cn("size-10 rounded-full border-2 border-background cursor-pointer shadow-sm transition-transform hover:scale-105 hover:z-10", member.gradient)} />
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>{member.name}</TooltipContent>
+                                                    </Tooltip>
+                                                ))}
+                                                {teamMembers.length > 4 && (
+                                                    <Tooltip>
+                                                        <TooltipTrigger>
+                                                            <div className="size-10 rounded-full border-2 border-background bg-zinc-800 text-zinc-400 flex items-center justify-center text-xs font-semibold cursor-pointer shadow-sm z-0">
+                                                                +{teamMembers.length - 4}
+                                                            </div>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>And {teamMembers.length - 4} more</TooltipContent>
+                                                    </Tooltip>
+                                                )}
+                                            </>
+                                        )}
                                     </div>
-                                    <button className="size-8 rounded-full border border-border bg-muted/50 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
-                                        <HugeiconsIcon icon={Add01Icon} className="size-4" />
+                                    <button
+                                        onClick={() => setIsAddMemberOpen(true)}
+                                        className="size-10 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 border-2 border-transparent hover:border-zinc-700 flex items-center justify-center text-zinc-400 hover:text-zinc-200 transition-all active:scale-95"
+                                    >
+                                        <HugeiconsIcon icon={Add01Icon} className="size-5" />
                                     </button>
                                 </div>
                             </div>
@@ -500,6 +540,39 @@ export default function FilesPage() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog >
+
+            {/* Add Member Dialog */}
+            <Dialog open={isAddMemberOpen} onOpenChange={setIsAddMemberOpen}>
+                <DialogContent className="sm:max-w-[425px] bg-background border-border text-foreground">
+                    <DialogHeader>
+                        <DialogTitle>Add Team Member</DialogTitle>
+                        <DialogDescription className="text-muted-foreground">
+                            Add a new member to this file group.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="member-name" className="text-right text-muted-foreground">
+                                Name
+                            </Label>
+                            <Input
+                                id="member-name"
+                                value={newMemberName}
+                                onChange={(e) => setNewMemberName(e.target.value)}
+                                className="col-span-3 bg-muted/50 border-input text-foreground focus-visible:ring-ring"
+                                placeholder="John Doe"
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") handleAddMember();
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="ghost" onClick={() => setIsAddMemberOpen(false)} className="text-muted-foreground hover:text-foreground hover:bg-accent">Cancel</Button>
+                        <Button onClick={handleAddMember} className="bg-primary text-primary-foreground hover:bg-primary/90">Add Member</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </SidebarProvider >
     );
 }
