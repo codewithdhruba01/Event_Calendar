@@ -35,38 +35,38 @@ export default function FolderPage() {
         <SidebarProvider>
             <CalendarSidebar />
             <SidebarInset>
-                <div className="flex flex-col h-svh overflow-hidden bg-zinc-950 text-zinc-100 font-sans">
+                <div className="flex flex-col h-svh overflow-hidden bg-background text-foreground font-sans">
                     {/* Header - Full Width */}
                     <AppHeader
                         showNotifications={false}
                         showSignIn={false}
                         className="py-5 md:py-5"
                         breadcrumbs={
-                            <div className="flex items-center gap-1.5 text-zinc-400 text-sm font-medium">
-                                <Link href="/files" className="flex items-center gap-1.5 hover:text-zinc-100 transition-colors">
+                            <div className="flex items-center gap-1.5 text-muted-foreground text-sm font-medium">
+                                <Link href="/files" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
                                     <HugeiconsIcon icon={Home01Icon} className="size-4" />
                                     <span>My Files</span>
                                 </Link>
-                                <HugeiconsIcon icon={ArrowRight01Icon} className="size-3 text-zinc-600" />
-                                <span className="text-zinc-100">{folderName}</span>
+                                <HugeiconsIcon icon={ArrowRight01Icon} className="size-3 text-muted-foreground/50" />
+                                <span className="text-foreground">{folderName}</span>
                             </div>
                         }
                     >
                         <div className="flex items-center gap-4">
                             <div className="relative hidden md:block group">
-                                <HugeiconsIcon icon={Search01Icon} className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-zinc-500 group-hover:text-zinc-400 transition-colors" />
+                                <HugeiconsIcon icon={Search01Icon} className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-hover:text-foreground transition-colors" />
                                 <Input
                                     placeholder={`Search in ${folderName}...`}
-                                    className="pl-9 bg-zinc-900 border-zinc-800 text-zinc-100 placeholder:text-zinc-500 w-64 focus-visible:ring-zinc-700 h-9 transition-colors group-hover:border-zinc-700"
+                                    className="pl-9 bg-muted/50 border-input text-foreground placeholder:text-muted-foreground w-64 focus-visible:ring-ring h-9 transition-colors group-hover:border-accent"
                                 />
                             </div>
                         </div>
                         <div className="flex items-center gap-2">
-                            <div className="flex items-center bg-zinc-900 border border-zinc-800 rounded-lg p-1 gap-1">
-                                <Button variant="ghost" size="icon" className="size-7 rounded-md hover:bg-zinc-800 text-zinc-100 bg-zinc-800">
+                            <div className="flex items-center bg-muted/50 border border-input rounded-lg p-1 gap-1">
+                                <Button variant="ghost" size="icon" className="size-7 rounded-md hover:bg-background text-foreground bg-background shadow-sm">
                                     <HugeiconsIcon icon={GridViewIcon} className="size-4" />
                                 </Button>
-                                <Button variant="ghost" size="icon" className="size-7 rounded-md hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100">
+                                <Button variant="ghost" size="icon" className="size-7 rounded-md hover:bg-background text-muted-foreground hover:text-foreground">
                                     <HugeiconsIcon icon={FilterHorizontalIcon} className="size-4" />
                                 </Button>
                             </div>
@@ -83,14 +83,14 @@ export default function FolderPage() {
 
                             {/* Page Title */}
                             <div className="px-1">
-                                <h1 className="text-2xl font-semibold tracking-tight text-zinc-100">{folderName}</h1>
+                                <h1 className="text-2xl font-semibold tracking-tight text-foreground">{folderName}</h1>
                             </div>
 
                             {/* Files Table matching Screenshot */}
                             <section>
-                                <div className="bg-zinc-950 rounded-xl overflow-hidden">
+                                <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
                                     {/* Table Header */}
-                                    <div className="grid grid-cols-[auto_1fr_auto_auto_auto_auto_auto] gap-4 p-4 text-xs font-medium text-zinc-500 border-b border-zinc-800/50">
+                                    <div className="grid grid-cols-[auto_1fr_auto_auto_auto_auto_auto] gap-4 p-4 text-xs font-medium text-muted-foreground border-b border-border">
                                         <div className="w-8"></div> {/* Icon column */}
                                         <div>Name</div>
                                         <div className="w-24">Size</div>
@@ -101,7 +101,7 @@ export default function FolderPage() {
                                     </div>
 
                                     {/* Table Body */}
-                                    <div className="divide-y divide-zinc-800/20">
+                                    <div className="divide-y divide-border">
                                         <FileRow
                                             name="Dashboard Mockup.fig"
                                             size="12.4 MB"
@@ -148,24 +148,24 @@ export default function FolderPage() {
 
 function FileRow({ name, size, modified, created, icon: Icon, isLiked }: any) {
     return (
-        <div className="grid grid-cols-[auto_1fr_auto_auto_auto_auto_auto] gap-4 p-4 items-center hover:bg-zinc-900/50 transition-colors group cursor-pointer">
+        <div className="grid grid-cols-[auto_1fr_auto_auto_auto_auto_auto] gap-4 p-4 items-center hover:bg-accent/50 transition-colors group cursor-pointer">
             <div className="w-8 flex justify-center">
                 <HugeiconsIcon icon={Icon} className="size-5 text-purple-500" />
             </div>
             <div className="flex items-center gap-2 min-w-0">
-                <span className="font-medium text-sm text-zinc-200 truncate">{name}</span>
-                <HugeiconsIcon icon={Link01Icon} className="size-3 text-zinc-600" />
+                <span className="font-medium text-sm text-foreground truncate">{name}</span>
+                <HugeiconsIcon icon={Link01Icon} className="size-3 text-muted-foreground" />
             </div>
-            <div className="w-24 text-sm text-zinc-500">{size}</div>
-            <div className="w-32 text-sm text-zinc-500">{modified}</div>
-            <div className="w-32 text-sm text-zinc-500">{created}</div>
+            <div className="w-24 text-sm text-muted-foreground">{size}</div>
+            <div className="w-32 text-sm text-muted-foreground">{modified}</div>
+            <div className="w-32 text-sm text-muted-foreground">{created}</div>
             <div className="w-8 flex justify-center">
-                <button className={cn("transition-colors", isLiked ? "text-yellow-500" : "text-zinc-600 hover:text-zinc-400")}>
+                <button className={cn("transition-colors", isLiked ? "text-yellow-500" : "text-muted-foreground hover:text-foreground")}>
                     <HugeiconsIcon icon={FavouriteIcon} className="size-4" />
                 </button>
             </div>
             <div className="w-8 flex justify-center">
-                <button className="text-zinc-500 hover:text-zinc-300">
+                <button className="text-muted-foreground hover:text-foreground">
                     <HugeiconsIcon icon={MoreVerticalIcon} className="size-4" />
                 </button>
             </div>
