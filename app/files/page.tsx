@@ -44,9 +44,77 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useState } from "react";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
+// Types
+interface Folder {
+    id: string;
+    label: string;
+    count: number;
+    size: string;
+    color: string;
+}
+
 export default function FilesPage() {
+    // State
+    const [folders, setFolders] = useState<Folder[]>([
+        { id: "1", label: "Design Assets", count: 24, size: "1.2 GB", color: "text-purple-400" },
+        { id: "2", label: "Projects", count: 18, size: "856 MB", color: "text-blue-400" },
+        { id: "3", label: "Documents", count: 45, size: "234 MB", color: "text-orange-400" },
+        { id: "4", label: "Media", count: 67, size: "4.5 GB", color: "text-pink-400" },
+        { id: "5", label: "Archives", count: 12, size: "2.1 GB", color: "text-emerald-400" },
+    ]);
+
+    const [isCreateOpen, setIsCreateOpen] = useState(false);
+    const [isRenameOpen, setIsRenameOpen] = useState(false);
+    const [newFolderName, setNewFolderName] = useState("");
+    const [folderToRename, setFolderToRename] = useState<Folder | null>(null);
+    const [renameValue, setRenameValue] = useState("");
+
+    // Handlers
+    const handleCreateFolder = () => {
+        if (!newFolderName.trim()) return;
+        const newFolder: Folder = {
+            id: Date.now().toString(),
+            label: newFolderName,
+            count: 0,
+            size: "0 B",
+            color: "text-zinc-400", // Default color
+        };
+        setFolders([...folders, newFolder]);
+        setNewFolderName("");
+        setIsCreateOpen(false);
+    };
+
+    const handleDeleteFolder = (id: string) => {
+        setFolders(folders.filter(f => f.id !== id));
+    };
+
+    const openRenameDialog = (folder: Folder) => {
+        setFolderToRename(folder);
+        setRenameValue(folder.label);
+        setIsRenameOpen(true);
+    };
+
+    const handleRenameFolder = () => {
+        if (!renameValue.trim() || !folderToRename) return;
+        setFolders(folders.map(f => f.id === folderToRename.id ? { ...f, label: renameValue } : f));
+        setIsRenameOpen(false);
+        setFolderToRename(null);
+        setRenameValue("");
+    };
+
     return (
         <SidebarProvider>
             <CalendarSidebar />
@@ -142,27 +210,27 @@ export default function FilesPage() {
                             <section>
                                 <div className="flex items-center justify-between mb-4">
                                     <h2 className="text-lg font-medium text-zinc-400">Folders</h2>
-                                    <Button size="sm" variant="ghost" className="h-7 text-xs text-zinc-400 hover:text-zinc-100 gap-2">
+                                    <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        className="h-7 text-xs text-zinc-400 hover:text-zinc-100 gap-2"
+                                        onClick={() => setIsCreateOpen(true)}
+                                    >
                                         <HugeiconsIcon icon={FolderAddIcon} className="size-4" />
                                         New Folder
                                     </Button>
                                 </div>
                                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                                    <Link href="/files/design-assets">
-                                        <FolderCard label="Design Assets" count={24} size="1.2 GB" color="text-purple-400" />
-                                    </Link>
-                                    <Link href="/files/projects">
-                                        <FolderCard label="Projects" count={18} size="856 MB" color="text-blue-400" />
-                                    </Link>
-                                    <Link href="/files/documents">
-                                        <FolderCard label="Documents" count={45} size="234 MB" color="text-orange-400" />
-                                    </Link>
-                                    <Link href="/files/media">
-                                        <FolderCard label="Media" count={67} size="4.5 GB" color="text-pink-400" />
-                                    </Link>
-                                    <Link href="/files/archives">
-                                        <FolderCard label="Archives" count={12} size="2.1 GB" color="text-emerald-400" />
-                                    </Link>
+                                    {folders.map((folder) => (
+                                        <div key={folder.id} className="contents">
+                                            {/* We wrap in contents div to keep key on element but preserve grid layout if needed, though Link is better wrapper */}
+                                            <FolderCard
+                                                folder={folder}
+                                                onDelete={() => handleDeleteFolder(folder.id)}
+                                                onRename={() => openRenameDialog(folder)}
+                                            />
+                                        </div>
+                                    ))}
                                 </div>
                             </section>
 
@@ -196,22 +264,22 @@ export default function FilesPage() {
                         <div className="w-96 border-l border-zinc-800 bg-zinc-950/50 hidden xl:flex flex-col p-6 space-y-6 overflow-y-auto">
 
                             {/* Storage Overview Card */}
-                            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 space-y-6">
+                            <div className="bg-[#0A0A0B] border border-zinc-800 rounded-2xl p-6 space-y-6 shadow-sm">
                                 <div className="flex items-center justify-between">
-                                    <h3 className="text-base font-semibold text-zinc-100">Storage Overview</h3>
-                                    <Link href="/plans" className="text-xs font-medium text-purple-400 hover:text-purple-300">Upgrade</Link>
+                                    <h3 className="text-[15px] font-semibold text-zinc-100">Storage Overview</h3>
+                                    <Link href="/plans" className="text-xs font-medium text-purple-400 hover:text-purple-300 transition-colors">Upgrade</Link>
                                 </div>
-                                <div className="space-y-3">
-                                    <div className="h-3 w-full bg-zinc-800 rounded-full overflow-hidden flex">
+                                <div className="space-y-4">
+                                    <div className="h-2.5 w-full bg-zinc-800/50 rounded-full overflow-hidden flex">
                                         <div className="h-full bg-purple-500 w-[27%]" />
                                         <div className="h-full bg-pink-500 w-[36%]" />
                                         <div className="h-full bg-orange-500 w-[17%]" />
                                         <div className="h-full bg-emerald-500 w-[13%]" />
                                         <div className="h-full bg-zinc-600 w-[7%]" />
                                     </div>
-                                    <div className="flex justify-between text-sm">
-                                        <span className="text-zinc-400">8.9 GB of 15 GB used</span>
-                                        <span className="font-medium text-zinc-100">59%</span>
+                                    <div className="flex justify-between items-center text-sm">
+                                        <span className="text-zinc-500 text-[13px]">8.9 GB of 15 GB used</span>
+                                        <span className="font-bold text-zinc-100 text-[15px]">59%</span>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-3">
@@ -224,59 +292,59 @@ export default function FilesPage() {
                             </div>
 
                             {/* Team Members Card */}
-                            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 space-y-4">
+                            <div className="bg-[#0A0A0B] border border-zinc-800 rounded-2xl p-6 space-y-6 shadow-sm">
                                 <div className="flex items-center justify-between">
-                                    <h3 className="text-base font-semibold text-zinc-100">Team Members</h3>
+                                    <h3 className="text-[15px] font-semibold text-zinc-100">Team Members</h3>
                                     <span className="text-xs font-medium text-zinc-500">5 people</span>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <div className="flex -space-x-3">
                                         <Tooltip>
                                             <TooltipTrigger>
-                                                <div className="size-10 rounded-full border-2 border-zinc-900 bg-gradient-to-br from-cyan-400 to-blue-500 cursor-help" />
+                                                <div className="size-10 rounded-full border-2 border-[#0A0A0B] bg-gradient-to-br from-cyan-400 to-blue-500 cursor-help" />
                                             </TooltipTrigger>
                                             <TooltipContent>John Doe</TooltipContent>
                                         </Tooltip>
                                         <Tooltip>
                                             <TooltipTrigger>
-                                                <div className="size-10 rounded-full border-2 border-zinc-900 bg-gradient-to-br from-blue-500 to-purple-500 cursor-help" />
+                                                <div className="size-10 rounded-full border-2 border-[#0A0A0B] bg-gradient-to-br from-blue-500 to-purple-500 cursor-help" />
                                             </TooltipTrigger>
                                             <TooltipContent>Jane Smith</TooltipContent>
                                         </Tooltip>
                                         <Tooltip>
                                             <TooltipTrigger>
-                                                <div className="size-10 rounded-full border-2 border-zinc-900 bg-gradient-to-br from-purple-500 to-pink-500 cursor-help" />
+                                                <div className="size-10 rounded-full border-2 border-[#0A0A0B] bg-gradient-to-br from-purple-500 to-pink-500 cursor-help" />
                                             </TooltipTrigger>
                                             <TooltipContent>Mike Johnson</TooltipContent>
                                         </Tooltip>
                                         <Tooltip>
                                             <TooltipTrigger>
-                                                <div className="size-10 rounded-full border-2 border-zinc-900 bg-gradient-to-br from-pink-500 to-rose-500 cursor-help" />
+                                                <div className="size-10 rounded-full border-2 border-[#0A0A0B] bg-gradient-to-br from-pink-500 to-rose-500 cursor-help" />
                                             </TooltipTrigger>
                                             <TooltipContent>Sarah Wilson</TooltipContent>
                                         </Tooltip>
                                         <Tooltip>
                                             <TooltipTrigger>
-                                                <div className="size-10 rounded-full border-2 border-zinc-900 bg-zinc-800 flex items-center justify-center text-xs font-medium text-zinc-400 cursor-help">
+                                                <div className="size-10 rounded-full border-2 border-[#0A0A0B] bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400 cursor-help">
                                                     +1
                                                 </div>
                                             </TooltipTrigger>
                                             <TooltipContent>And 1 more</TooltipContent>
                                         </Tooltip>
                                     </div>
-                                    <button className="size-10 rounded-xl border border-zinc-700/50 bg-zinc-800/50 flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors">
+                                    <button className="size-10 rounded-xl border border-zinc-800 bg-zinc-900/50 flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors">
                                         <HugeiconsIcon icon={Add01Icon} className="size-5" />
                                     </button>
                                 </div>
                             </div>
 
                             {/* Recent Activity Card */}
-                            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 flex-1 flex flex-col min-h-0">
+                            <div className="bg-[#0A0A0B] border border-zinc-800 rounded-2xl p-6 flex-1 flex flex-col min-h-0 shadow-sm">
                                 <div className="flex items-center justify-between mb-6">
-                                    <h3 className="text-base font-semibold text-zinc-100">Recent Activity</h3>
-                                    <button className="text-xs font-medium text-zinc-500 hover:text-zinc-300">View all</button>
+                                    <h3 className="text-[15px] font-semibold text-zinc-100">Recent Activity</h3>
+                                    <button className="text-xs font-medium text-zinc-500 hover:text-zinc-300 transition-colors">View all</button>
                                 </div>
-                                <div className="space-y-6 overflow-y-auto pr-2 custom-scrollbar">
+                                <div className="space-y-4 overflow-y-auto pr-2 custom-scrollbar">
                                     <ActivityItem
                                         user="Leonel Ngoya"
                                         action="uploaded"
@@ -345,8 +413,74 @@ export default function FilesPage() {
                         </div>
                     </div>
                 </div>
-            </SidebarInset>
-        </SidebarProvider>
+
+            </SidebarInset >
+
+            {/* Create Folder Dialog */}
+            < Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen} >
+                <DialogContent className="sm:max-w-[425px] bg-zinc-900 border-zinc-800 text-zinc-100">
+                    <DialogHeader>
+                        <DialogTitle>Create New Folder</DialogTitle>
+                        <DialogDescription className="text-zinc-400">
+                            Enter a name for your new folder.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="name" className="text-right text-zinc-300">
+                                Name
+                            </Label>
+                            <Input
+                                id="name"
+                                value={newFolderName}
+                                onChange={(e) => setNewFolderName(e.target.value)}
+                                className="col-span-3 bg-zinc-800 border-zinc-700 text-zinc-100 focus-visible:ring-zinc-600"
+                                placeholder="My New Folder"
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") handleCreateFolder();
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="ghost" onClick={() => setIsCreateOpen(false)} className="text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800">Cancel</Button>
+                        <Button onClick={handleCreateFolder} className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200">Create Folder</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog >
+
+            {/* Rename Folder Dialog */}
+            < Dialog open={isRenameOpen} onOpenChange={setIsRenameOpen} >
+                <DialogContent className="sm:max-w-[425px] bg-zinc-900 border-zinc-800 text-zinc-100">
+                    <DialogHeader>
+                        <DialogTitle>Rename Folder</DialogTitle>
+                        <DialogDescription className="text-zinc-400">
+                            Enter a new name for the folder.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="rename" className="text-right text-zinc-300">
+                                Name
+                            </Label>
+                            <Input
+                                id="rename"
+                                value={renameValue}
+                                onChange={(e) => setRenameValue(e.target.value)}
+                                className="col-span-3 bg-zinc-800 border-zinc-700 text-zinc-100 focus-visible:ring-zinc-600"
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") handleRenameFolder();
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="ghost" onClick={() => setIsRenameOpen(false)} className="text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800">Cancel</Button>
+                        <Button onClick={handleRenameFolder} className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200">Save Changes</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog >
+        </SidebarProvider >
     );
 }
 
@@ -375,21 +509,33 @@ function StorageCard({ icon: Icon, label, amount, percentage, color, bg, barColo
     );
 }
 
-function FolderCard({ label, count, size, color }: any) {
+function FolderCard({ folder, onDelete, onRename }: { folder: Folder, onDelete: () => void, onRename: () => void }) {
+    // Generate slug for link
+    const slug = folder.label.toLowerCase().replace(/ /g, "-");
+
     return (
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 flex flex-col gap-2 hover:bg-zinc-800/50 transition-colors group cursor-pointer relative">
-            <div className="flex items-start justify-between">
-                <HugeiconsIcon icon={Folder01Icon} className={cn("size-8 transition-colors", color)} />
+            <Link href={`/files/${slug}`} className="absolute inset-0 z-10" />
+            <div className="flex items-start justify-between relative">
+                <HugeiconsIcon icon={Folder01Icon} className={cn("size-8 transition-colors", folder.color)} />
                 <DropdownMenu>
-                    <DropdownMenuTrigger onClick={(e) => e.preventDefault()} className="text-zinc-500 hover:text-zinc-300 transition-colors p-1 -mr-2 -mt-2 cursor-pointer">
+                    <DropdownMenuTrigger onClick={(e) => e.preventDefault()} className="text-zinc-500 hover:text-zinc-300 transition-colors p-1 -mr-2 -mt-2 cursor-pointer z-20 relative">
                         <HugeiconsIcon icon={MoreVerticalIcon} className="size-4" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent onClick={(e) => e.preventDefault()} align="end" className="w-48 bg-zinc-900 border-zinc-800">
-                        <DropdownMenuItem className="text-zinc-300 focus:bg-zinc-800 focus:text-zinc-100 gap-2 cursor-pointer">
-                            <HugeiconsIcon icon={ArrowUpRight01Icon} className="size-4" />
-                            Open
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-zinc-300 focus:bg-zinc-800 focus:text-zinc-100 gap-2 cursor-pointer">
+                        <Link href={`/files/${slug}`} passHref>
+                            <DropdownMenuItem className="text-zinc-300 focus:bg-zinc-800 focus:text-zinc-100 gap-2 cursor-pointer">
+                                <HugeiconsIcon icon={ArrowUpRight01Icon} className="size-4" />
+                                Open
+                            </DropdownMenuItem>
+                        </Link>
+                        <DropdownMenuItem
+                            className="text-zinc-300 focus:bg-zinc-800 focus:text-zinc-100 gap-2 cursor-pointer"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onRename();
+                            }}
+                        >
                             <HugeiconsIcon icon={Edit02Icon} className="size-4" />
                             Rename
                         </DropdownMenuItem>
@@ -397,16 +543,22 @@ function FolderCard({ label, count, size, color }: any) {
                             <HugeiconsIcon icon={Share05Icon} className="size-4" />
                             Share
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-400 focus:bg-red-500/10 focus:text-red-400 gap-2 cursor-pointer">
+                        <DropdownMenuItem
+                            className="text-red-400 focus:bg-red-500/10 focus:text-red-400 gap-2 cursor-pointer"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onDelete();
+                            }}
+                        >
                             <HugeiconsIcon icon={Delete01Icon} className="size-4" />
                             Delete
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-            <div className="mt-2">
-                <div className="font-medium text-sm text-zinc-200 truncate">{label}</div>
-                <div className="text-xs text-zinc-500">{count} files • {size}</div>
+            <div className="mt-2 text-left">
+                <div className="font-medium text-sm text-zinc-200 truncate">{folder.label}</div>
+                <div className="text-xs text-zinc-500">{folder.count} files • {folder.size}</div>
             </div>
         </div>
     );
@@ -433,11 +585,11 @@ function FileRow({ name, size, modified, created, icon: Icon, color }: any) {
 
 function LegendItem({ label, size, color }: any) {
     return (
-        <div className="flex items-center gap-3 bg-zinc-950/30 p-2.5 rounded-xl border border-zinc-800/30">
-            <div className={cn("size-2.5 rounded-full shrink-0", color)} />
-            <div className="flex flex-col min-w-0">
-                <span className="text-xs font-medium text-zinc-300 truncate">{label}</span>
-                <span className="text-[10px] text-zinc-100 font-bold">{size}</span>
+        <div className="flex items-center gap-2.5 bg-zinc-900/50 p-2.5 rounded-xl border border-zinc-800 hover:bg-zinc-900/80 transition-colors">
+            <div className={cn("size-2 rounded-full shrink-0 shadow-[0_0_8px_-1px_currentColor] opacity-90", color, color.replace('bg-', 'text-'))} />
+            <div className="flex items-center justify-between w-full min-w-0">
+                <span className="text-[13px] text-zinc-400 truncate">{label}</span>
+                <span className="text-[13px] text-zinc-200 font-semibold">{size}</span>
             </div>
         </div>
     );
@@ -445,24 +597,22 @@ function LegendItem({ label, size, color }: any) {
 
 function ActivityItem({ user, action, target, time, icon: Icon, iconColor, avatarGradient }: any) {
     return (
-        <div className="flex gap-4 group">
+        <div className="flex gap-2.5 group items-start">
             <div className="relative shrink-0">
-                <div className={cn("size-10 rounded-full bg-gradient-to-br", avatarGradient)} />
+                <div className={cn("size-6 rounded-full bg-gradient-to-br shadow-inner", avatarGradient)} />
             </div>
             <div className="flex flex-col min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-2">
-                    <p className="text-sm text-zinc-100 leading-snug">
+                    <p className="text-[11px] text-zinc-100 leading-tight">
                         <span className="font-semibold">{user}</span> <span className="text-zinc-500">{action}</span> <br />
-                        <span className="text-zinc-500 truncate block text-xs mt-0.5">{target}</span>
+                        <span className="text-zinc-500 truncate block font-medium">{target}</span>
                     </p>
-                    <div className="flex flex-col items-end gap-1 shrink-0">
-                        <div className={cn("p-1.5 rounded-lg bg-zinc-800/50 group-hover:bg-zinc-800 transition-colors", iconColor)}>
-                            <HugeiconsIcon icon={Icon} className="size-3.5" />
+                    <div className="flex items-center gap-1.5 shrink-0">
+                        <div className={cn("p-1 rounded-md bg-zinc-900 border border-zinc-800 group-hover:bg-zinc-800 transition-colors", iconColor)}>
+                            <HugeiconsIcon icon={Icon} className="size-2.5" />
                         </div>
+                        <span className="text-[9px] text-zinc-500 font-medium tabular-nums">{time}</span>
                     </div>
-                </div>
-                <div className="flex justify-end mt-1">
-                    <span className="text-[10px] text-zinc-600">{time}</span>
                 </div>
             </div>
         </div>
