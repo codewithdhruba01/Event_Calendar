@@ -28,13 +28,22 @@ import {
     Delete02Icon,
     Clock01Icon,
     Upload02Icon,
+    ArrowRight01Icon,
+    Folder02Icon,
+    Share05Icon,
+    Delete01Icon,
+    Edit02Icon,
+    ArrowUpRight01Icon,
     FolderAddIcon,
-    Link01Icon,
-    FileAddIcon,
-    Home01Icon,
     Add01Icon
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
 export default function FilesPage() {
@@ -133,6 +142,10 @@ export default function FilesPage() {
                             <section>
                                 <div className="flex items-center justify-between mb-4">
                                     <h2 className="text-lg font-medium text-zinc-400">Folders</h2>
+                                    <Button size="sm" variant="ghost" className="h-7 text-xs text-zinc-400 hover:text-zinc-100 gap-2">
+                                        <HugeiconsIcon icon={FolderAddIcon} className="size-4" />
+                                        New Folder
+                                    </Button>
                                 </div>
                                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                                     <Link href="/files/design-assets">
@@ -367,9 +380,29 @@ function FolderCard({ label, count, size, color }: any) {
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 flex flex-col gap-2 hover:bg-zinc-800/50 transition-colors group cursor-pointer relative">
             <div className="flex items-start justify-between">
                 <HugeiconsIcon icon={Folder01Icon} className={cn("size-8 transition-colors", color)} />
-                <button className="opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 hover:text-zinc-300">
-                    <HugeiconsIcon icon={MoreVerticalIcon} className="size-4" />
-                </button>
+                <DropdownMenu>
+                    <DropdownMenuTrigger onClick={(e) => e.preventDefault()} className="text-zinc-500 hover:text-zinc-300 transition-colors p-1 -mr-2 -mt-2 cursor-pointer">
+                        <HugeiconsIcon icon={MoreVerticalIcon} className="size-4" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent onClick={(e) => e.preventDefault()} align="end" className="w-48 bg-zinc-900 border-zinc-800">
+                        <DropdownMenuItem className="text-zinc-300 focus:bg-zinc-800 focus:text-zinc-100 gap-2 cursor-pointer">
+                            <HugeiconsIcon icon={ArrowUpRight01Icon} className="size-4" />
+                            Open
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="text-zinc-300 focus:bg-zinc-800 focus:text-zinc-100 gap-2 cursor-pointer">
+                            <HugeiconsIcon icon={Edit02Icon} className="size-4" />
+                            Rename
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="text-zinc-300 focus:bg-zinc-800 focus:text-zinc-100 gap-2 cursor-pointer">
+                            <HugeiconsIcon icon={Share05Icon} className="size-4" />
+                            Share
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="text-red-400 focus:bg-red-500/10 focus:text-red-400 gap-2 cursor-pointer">
+                            <HugeiconsIcon icon={Delete01Icon} className="size-4" />
+                            Delete
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
             <div className="mt-2">
                 <div className="font-medium text-sm text-zinc-200 truncate">{label}</div>
