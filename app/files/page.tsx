@@ -127,6 +127,12 @@ export default function FilesPage() {
                         showNotifications={false}
                         showSignIn={false}
                         className="py-5 md:py-5"
+                        breadcrumbs={
+                            <div className="flex-1 min-w-0">
+                                <h1 className="text-xl font-semibold tracking-tight text-zinc-100">My Files</h1>
+                                <p className="text-zinc-400 text-xs">Manage your documents and assets.</p>
+                            </div>
+                        }
                     >
                         <div className="relative hidden md:block group">
                             <HugeiconsIcon icon={Search01Icon} className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-zinc-500 group-hover:text-zinc-400 transition-colors" />
@@ -171,10 +177,7 @@ export default function FilesPage() {
                             {/* Header */}
 
 
-                            <div className="px-1">
-                                <h1 className="text-2xl font-semibold tracking-tight text-zinc-100">My Files</h1>
-                                <p className="text-zinc-400 text-sm">Manage your documents and assets.</p>
-                            </div>
+
 
                             {/* Storage Categories */}
                             <section>
