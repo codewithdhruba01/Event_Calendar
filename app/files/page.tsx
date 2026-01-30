@@ -167,7 +167,7 @@ export default function FilesPage() {
                         </div>
 
                         {/* Right Panel - Info */}
-                        <div className="w-80 border-l border-zinc-800 bg-zinc-950/50 hidden xl:flex flex-col p-6 space-y-6 overflow-y-auto">
+                        <div className="w-96 border-l border-zinc-800 bg-zinc-950/50 hidden xl:flex flex-col p-6 space-y-6 overflow-y-auto">
 
                             {/* Storage Overview Card */}
                             <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 space-y-6">
