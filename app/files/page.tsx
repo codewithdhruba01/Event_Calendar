@@ -2,6 +2,7 @@
 
 import { AppHeader } from "@/components/app-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { CalendarSidebar } from "@/components/calendar/calendar-sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -205,13 +206,38 @@ export default function FilesPage() {
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <div className="flex -space-x-3">
-                                        <div className="size-10 rounded-full border-2 border-zinc-900 bg-gradient-to-br from-cyan-400 to-blue-500" />
-                                        <div className="size-10 rounded-full border-2 border-zinc-900 bg-gradient-to-br from-blue-500 to-purple-500" />
-                                        <div className="size-10 rounded-full border-2 border-zinc-900 bg-gradient-to-br from-purple-500 to-pink-500" />
-                                        <div className="size-10 rounded-full border-2 border-zinc-900 bg-gradient-to-br from-pink-500 to-rose-500" />
-                                        <div className="size-10 rounded-full border-2 border-zinc-900 bg-zinc-800 flex items-center justify-center text-xs font-medium text-zinc-400">
-                                            +1
-                                        </div>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <div className="size-10 rounded-full border-2 border-zinc-900 bg-gradient-to-br from-cyan-400 to-blue-500 cursor-help" />
+                                            </TooltipTrigger>
+                                            <TooltipContent>John Doe</TooltipContent>
+                                        </Tooltip>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <div className="size-10 rounded-full border-2 border-zinc-900 bg-gradient-to-br from-blue-500 to-purple-500 cursor-help" />
+                                            </TooltipTrigger>
+                                            <TooltipContent>Jane Smith</TooltipContent>
+                                        </Tooltip>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <div className="size-10 rounded-full border-2 border-zinc-900 bg-gradient-to-br from-purple-500 to-pink-500 cursor-help" />
+                                            </TooltipTrigger>
+                                            <TooltipContent>Mike Johnson</TooltipContent>
+                                        </Tooltip>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <div className="size-10 rounded-full border-2 border-zinc-900 bg-gradient-to-br from-pink-500 to-rose-500 cursor-help" />
+                                            </TooltipTrigger>
+                                            <TooltipContent>Sarah Wilson</TooltipContent>
+                                        </Tooltip>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <div className="size-10 rounded-full border-2 border-zinc-900 bg-zinc-800 flex items-center justify-center text-xs font-medium text-zinc-400 cursor-help">
+                                                    +1
+                                                </div>
+                                            </TooltipTrigger>
+                                            <TooltipContent>And 1 more</TooltipContent>
+                                        </Tooltip>
                                     </div>
                                     <button className="size-10 rounded-xl border border-zinc-700/50 bg-zinc-800/50 flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors">
                                         <HugeiconsIcon icon={Add01Icon} className="size-5" />
